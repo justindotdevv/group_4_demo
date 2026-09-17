@@ -1,0 +1,1946 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FFFCF0">
+  <title>Cloud, Built to Adapt — Motion Graphic</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <style>
+    @font-face {
+      font-family: "Geist";
+      src: url("https://cdn.jsdelivr.net/npm/geist@1.7.2/dist/fonts/geist-sans/Geist-Variable.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Geist Mono";
+      src: url("https://cdn.jsdelivr.net/npm/geist@1.7.2/dist/fonts/geist-mono/GeistMono-Variable.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+    }
+
+    :root {
+      --ink: #100F0F;
+      --muted: #6F6E69;
+      --dim: #878580;
+      --line: #CECDC3;
+      --panel: rgba(255, 252, 240, .88);
+      --bg: #FFFCF0;
+      --bg-2: #F2F0E5;
+      --ui: #E6E4D9;
+      --ui-2: #DAD8CE;
+      --accent: #24837B;
+      --accent-2: #24837B;
+      --alert: #AF3029;
+      --scene-duration: 9000ms;
+      --ease: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Geist", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button { font: inherit; }
+
+    .presentation {
+      position: relative;
+      isolation: isolate;
+      width: 100%;
+      height: 100%;
+      min-height: 520px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 77% 42%, rgba(36, 131, 123, .09), transparent 30%),
+        linear-gradient(125deg, #FFFCF0 0%, #F8F5E9 58%, #F2F0E5 100%);
+    }
+
+    .presentation::before {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      content: "";
+      opacity: .21;
+      background-image:
+        linear-gradient(rgba(16,15,15,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16,15,15,.07) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: linear-gradient(90deg, #000 5%, transparent 68%);
+    }
+
+    .noise {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      pointer-events: none;
+      opacity: .025;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.85'/%3E%3C/svg%3E");
+    }
+
+    .ambient {
+      position: absolute;
+      top: 15%;
+      right: 3%;
+      width: min(56vw, 850px);
+      aspect-ratio: 1;
+      z-index: -1;
+      border: 1px solid rgba(36, 131, 123, .13);
+      border-radius: 50%;
+      animation: breathe 8s ease-in-out infinite;
+    }
+
+    .ambient::before,
+    .ambient::after {
+      position: absolute;
+      inset: 13%;
+      content: "";
+      border: inherit;
+      border-radius: inherit;
+    }
+
+    .ambient::after { inset: 27%; }
+
+    .topbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: minmax(200px, 1fr) minmax(280px, 2fr) minmax(200px, 1fr);
+      align-items: center;
+      gap: 28px;
+      min-height: 88px;
+      padding: 0 clamp(24px, 4vw, 72px);
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(7, 16, 15, .88), rgba(7, 16, 15, .08));
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 720;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      position: relative;
+      width: 25px;
+      height: 25px;
+      border: 1px solid rgba(112, 241, 189, .55);
+      border-radius: 50%;
+    }
+
+    .brand-mark::before,
+    .brand-mark::after {
+      position: absolute;
+      content: "";
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    .brand-mark::before { width: 5px; height: 5px; top: 2px; right: 1px; }
+    .brand-mark::after { width: 3px; height: 3px; bottom: 4px; left: -1px; }
+
+    .progress-track {
+      position: relative;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .progress-fill {
+      position: absolute;
+      inset: -1px auto auto 0;
+      width: 0;
+      height: 3px;
+      border-radius: 4px;
+      background: var(--accent);
+      box-shadow: 0 0 16px rgba(112, 241, 189, .65);
+    }
+
+    .presentation:not(.paused) .progress-fill {
+      animation: scene-progress var(--scene-duration) linear forwards;
+    }
+
+    .counter {
+      justify-self: end;
+      color: var(--muted);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      letter-spacing: .12em;
+    }
+
+    .counter strong {
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .scenes {
+      position: absolute;
+      inset: 89px 0 74px;
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: minmax(300px, .82fr) minmax(480px, 1.45fr);
+      align-items: stretch;
+      padding: 0 clamp(24px, 4vw, 72px);
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(16px);
+      transition:
+        opacity .6s ease,
+        transform .7s var(--ease),
+        visibility 0s linear .7s;
+    }
+
+    .scene.active {
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+      transition-delay: 0s;
+    }
+
+    .copy {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+      padding: 4vh 5vw 4vh 0;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin: 0 0 22px;
+      color: var(--accent);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+      font-weight: 650;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 27px;
+      height: 1px;
+      content: "";
+      background: currentColor;
+    }
+
+    h1 {
+      max-width: 8ch;
+      margin: 0;
+      font-size: clamp(48px, 6vw, 96px);
+      font-weight: 510;
+      letter-spacing: -.065em;
+      line-height: .9;
+    }
+
+    h1 span { color: var(--accent); }
+
+    .lede {
+      max-width: 490px;
+      margin: 30px 0 0;
+      color: #b5c1bc;
+      font-size: clamp(15px, 1.22vw, 19px);
+      line-height: 1.62;
+    }
+
+    .takeaway {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 13px;
+      align-items: center;
+      margin-top: 31px;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .takeaway i {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 18px rgba(112, 241, 189, .75);
+    }
+
+    .visual {
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+      border-left: 1px solid var(--line);
+    }
+
+    .visual-label {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      z-index: 5;
+      color: var(--muted);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .metric {
+      position: absolute;
+      right: 0;
+      top: 26px;
+      z-index: 4;
+      text-align: right;
+    }
+
+    .metric-value {
+      display: block;
+      color: var(--accent-2);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: clamp(26px, 3vw, 48px);
+      letter-spacing: -.06em;
+    }
+
+    .metric-label {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    /* Elastic scaling */
+    .scale-stage {
+      position: absolute;
+      inset: 14% 2% 8% 5%;
+      display: grid;
+      grid-template-columns: minmax(190px, .82fr) minmax(300px, 1.35fr);
+      align-items: center;
+      gap: 8%;
+    }
+
+    .workload-control {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 300px;
+      padding: 0 4px 0 0;
+    }
+
+    .control-kicker {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .workload-readout {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: 19px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .workload-readout strong {
+      color: var(--accent-2);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: clamp(42px, 4.6vw, 70px);
+      font-weight: 500;
+      letter-spacing: -.07em;
+      line-height: 1;
+    }
+
+    .workload-readout span {
+      max-width: 9ch;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 680;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .range-wrap {
+      position: relative;
+      padding: 30px 0 21px;
+    }
+
+    .simulation-range {
+      --load: 18%;
+      width: 100%;
+      height: 3px;
+      margin: 0;
+      appearance: none;
+      border-radius: 3px;
+      outline: 0;
+      background: linear-gradient(90deg, var(--accent) 0 var(--load), rgba(213, 234, 223, .15) var(--load) 100%);
+      cursor: ew-resize;
+    }
+
+    .simulation-range::-webkit-slider-thumb {
+      width: 20px;
+      height: 20px;
+      appearance: none;
+      border: 4px solid var(--bg);
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 0 24px rgba(112, 241, 189, .65);
+    }
+
+    .simulation-range::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border: 4px solid var(--bg);
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 0 24px rgba(112, 241, 189, .65);
+    }
+
+    .simulation-range:focus-visible { outline: 2px solid var(--accent); outline-offset: 10px; }
+
+    .range-ticks {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      color: var(--dim);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 8px;
+      letter-spacing: .08em;
+    }
+
+    .capacity-rule {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 11px;
+      align-items: center;
+      padding: 15px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .capacity-rule i {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(112, 241, 189, .32);
+      border-radius: 50%;
+      color: var(--accent);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 9px;
+      font-style: normal;
+    }
+
+    .demo-mode {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+      color: var(--dim);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 9px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .demo-mode strong {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .demo-mode strong::before {
+      width: 5px;
+      height: 5px;
+      content: "";
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    .server-cluster {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      perspective: 600px;
+    }
+
+    .server {
+      position: relative;
+      height: clamp(82px, 9vw, 130px);
+      overflow: hidden;
+      border: 1px solid rgba(175, 222, 203, .16);
+      background: linear-gradient(145deg, rgba(28, 53, 47, .78), rgba(10, 22, 20, .88));
+      box-shadow: inset 0 1px rgba(255,255,255,.03);
+      opacity: .13;
+      transform: translateY(10px) scale(.96);
+      transition: opacity .42s ease, transform .55s var(--ease), border-color .4s ease, box-shadow .4s ease;
+    }
+
+    .server::before {
+      position: absolute;
+      inset: 14px 13px auto;
+      height: 3px;
+      content: "";
+      background: linear-gradient(90deg, var(--dim) 0 62%, rgba(255,255,255,.06) 62% 100%);
+      box-shadow: 0 16px rgba(255,255,255,.07), 0 32px rgba(255,255,255,.07);
+    }
+
+    .server::after {
+      position: absolute;
+      right: 12px;
+      bottom: 11px;
+      width: 5px;
+      height: 5px;
+      content: "";
+      border-radius: 50%;
+      background: var(--dim);
+      transition: background .35s ease, box-shadow .35s ease;
+    }
+
+    .server.online {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      border-color: rgba(112, 241, 189, .46);
+      box-shadow: inset 0 1px rgba(255,255,255,.04), 0 12px 35px rgba(0,0,0,.2), 0 0 25px rgba(112, 241, 189, .04);
+    }
+
+    .server.online::after {
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(112, 241, 189, .75);
+    }
+
+    .server-id,
+    .server-state {
+      position: absolute;
+      left: 13px;
+      z-index: 2;
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 8px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .server-id { bottom: 12px; color: var(--muted); }
+    .server-state { right: 28px; bottom: 12px; left: auto; color: var(--dim); transition: color .35s ease; }
+    .server.online .server-state { color: var(--accent); }
+
+    .server-cluster::before {
+      position: absolute;
+      inset: -25px -21px;
+      z-index: -1;
+      content: "";
+      border: 1px solid rgba(112, 241, 189, .12);
+      border-radius: 50%;
+      transform: scale(.68);
+      opacity: 0;
+    }
+
+    .active .server-cluster::before { animation: cloud-expand 1.4s .2s var(--ease) forwards; }
+
+    .live-caption {
+      position: absolute;
+      right: 2%;
+      bottom: 2%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .live-caption::before {
+      width: 6px;
+      height: 6px;
+      content: "";
+      border-radius: 50%;
+      background: currentColor;
+      animation: blink 1s infinite;
+    }
+
+    /* Distributed processing */
+    .distributed-stage {
+      position: absolute;
+      inset: 12% 1% 5% 4%;
+    }
+
+    .distributed-map {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .distributed-map path {
+      fill: none;
+      stroke: rgba(112, 241, 189, .35);
+      stroke-width: 1.3;
+      stroke-dasharray: 4 8;
+      vector-effect: non-scaling-stroke;
+      opacity: .035;
+      transition: opacity .35s ease;
+    }
+
+    .active .distributed-map path {
+      opacity: .035;
+    }
+
+    .active .distributed-map path.enabled {
+      opacity: 1;
+      animation: data-flow 1s linear infinite;
+    }
+
+    .active .distributed-map path:nth-child(2n) { animation-delay: -.45s; }
+
+    .dataset {
+      position: absolute;
+      left: 3%;
+      top: 27%;
+      width: clamp(116px, 13vw, 190px);
+      aspect-ratio: 1.25;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(112, 241, 189, .45);
+      background: rgba(11, 27, 23, .9);
+      box-shadow: 0 0 45px rgba(112, 241, 189, .08), inset 0 0 30px rgba(112, 241, 189, .04);
+    }
+
+    .dataset::before,
+    .dataset::after {
+      position: absolute;
+      inset: 7px -7px -7px 7px;
+      z-index: -1;
+      content: "";
+      border: 1px solid rgba(112, 241, 189, .18);
+    }
+
+    .dataset::after { inset: 14px -14px -14px 14px; opacity: .5; }
+
+    .dataset span,
+    .result span {
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: clamp(18px, 2vw, 29px);
+      color: var(--accent-2);
+    }
+
+    .object-label {
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 15px);
+      width: max-content;
+      transform: translateX(-50%);
+      color: var(--muted) !important;
+      font-size: 9px !important;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .workers {
+      position: absolute;
+      left: 40%;
+      top: 8%;
+      bottom: 18%;
+      width: 28%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(13px, 1.8vw, 26px);
+    }
+
+    .worker {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 78px;
+      border: 1px solid rgba(177, 218, 202, .17);
+      background: rgba(14, 30, 27, .86);
+      color: var(--muted);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: .12em;
+      opacity: .12;
+      transform: scale(.91);
+      transition: opacity .4s ease, transform .5s var(--ease), border-color .4s ease, color .4s ease;
+    }
+
+    .worker::before {
+      position: absolute;
+      inset: 0;
+      content: "";
+      background: linear-gradient(90deg, transparent, rgba(112, 241, 189, .2), transparent);
+      transform: translateX(-100%);
+    }
+
+    .worker.processing {
+      opacity: 1;
+      transform: scale(1);
+      border-color: rgba(112, 241, 189, .38);
+      color: var(--accent-2);
+    }
+
+    .active .worker.processing::before { animation: worker-scan 2s ease-in-out infinite; }
+
+    .shard {
+      position: absolute;
+      left: 19%;
+      top: 45%;
+      width: 10px;
+      height: 10px;
+      z-index: 3;
+      border: 1px solid var(--accent);
+      background: var(--bg);
+      opacity: 0;
+    }
+
+    .active .shard.enabled { animation: shard-out 2.2s var(--ease) infinite; }
+    .active .shard:nth-child(3) { --tx: 25vw; --ty: -23vh; animation-delay: .1s; }
+    .active .shard:nth-child(4) { --tx: 35vw; --ty: -23vh; animation-delay: .34s; }
+    .active .shard:nth-child(5) { --tx: 25vw; --ty: -2vh; animation-delay: .58s; }
+    .active .shard:nth-child(6) { --tx: 35vw; --ty: -2vh; animation-delay: .82s; }
+    .active .shard:nth-child(7) { --tx: 25vw; --ty: 20vh; animation-delay: 1.06s; }
+    .active .shard:nth-child(8) { --tx: 35vw; --ty: 20vh; animation-delay: 1.3s; }
+
+    .result {
+      position: absolute;
+      right: 2%;
+      top: 31%;
+      width: clamp(110px, 12vw, 176px);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(112, 241, 189, .4);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(112, 241, 189, .13), rgba(7, 16, 15, .9) 63%);
+      box-shadow: 0 0 50px rgba(112, 241, 189, .08);
+      opacity: 0;
+      transform: scale(.8);
+    }
+
+    .active .result { animation: result-in .7s 2s var(--ease) forwards, result-pulse 3s 3s ease-in-out infinite; }
+
+    .worker-control {
+      position: absolute;
+      left: 2%;
+      bottom: 0;
+      width: clamp(155px, 18vw, 235px);
+    }
+
+    .compact-control-label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 9px;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .compact-control-label strong {
+      color: var(--accent-2);
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -.04em;
+    }
+
+    .worker-range,
+    .replica-range { --load: 100%; }
+
+    .time-comparison {
+      position: absolute;
+      right: 1%;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 15px;
+      min-width: 275px;
+    }
+
+    .comparison-cell span {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--dim);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 8px;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .comparison-cell strong {
+      color: var(--muted);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: clamp(15px, 1.5vw, 22px);
+      font-weight: 500;
+      letter-spacing: -.03em;
+    }
+
+    .comparison-cell.accent strong { color: var(--accent-2); }
+
+    .comparison-arrow {
+      color: var(--accent);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 15px;
+    }
+
+    /* Availability */
+    .availability-stage {
+      position: absolute;
+      inset: 12% 2% 5% 4%;
+    }
+
+    .region-map {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .region-map path {
+      fill: none;
+      stroke: rgba(112, 241, 189, .32);
+      stroke-width: 1.5;
+      stroke-dasharray: 6 9;
+      vector-effect: non-scaling-stroke;
+      opacity: .05;
+      transition: opacity .35s ease;
+    }
+
+    .active .region-map path.enabled {
+      opacity: 1;
+      animation: replication-flow 1.2s linear infinite;
+    }
+
+    .region {
+      position: absolute;
+      width: clamp(142px, 16vw, 230px);
+      aspect-ratio: 1.18;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 18px;
+      border: 1px solid rgba(174, 222, 203, .22);
+      background: linear-gradient(145deg, rgba(22, 45, 40, .9), rgba(9, 21, 19, .92));
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    .region-1 { left: 3%; top: 16%; }
+    .region-2 { left: 39%; top: 48%; }
+    .region-3 { right: 2%; top: 10%; }
+
+    .active .region { animation: region-in .7s var(--ease) forwards; }
+    .active .region-1 { animation-delay: .4s; }
+    .active .region-2 { animation-delay: .65s; }
+    .active .region-3 { animation-delay: .9s; }
+
+    .region-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .status-light {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 13px rgba(112, 241, 189, .8);
+    }
+
+    .storage-stack {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      height: 45%;
+      align-items: end;
+    }
+
+    .storage-stack i {
+      height: 72%;
+      border: 1px solid rgba(112, 241, 189, .35);
+      background: rgba(112, 241, 189, .07);
+      transform-origin: bottom;
+    }
+
+    .storage-stack i:nth-child(2) { height: 92%; }
+    .storage-stack i:nth-child(3) { height: 65%; }
+    .storage-stack i:nth-child(4) { height: 100%; }
+    .storage-stack i:nth-child(5) { height: 82%; }
+
+    .region-name {
+      color: var(--ink);
+      font-size: clamp(13px, 1.2vw, 17px);
+      font-weight: 600;
+      letter-spacing: -.02em;
+    }
+
+    .region.disabled {
+      opacity: .1 !important;
+      transform: translateY(12px) scale(.96) !important;
+      filter: saturate(.2);
+    }
+
+    .region.failed {
+      opacity: .4 !important;
+      border-color: rgba(255, 114, 94, .62);
+      filter: saturate(.35);
+    }
+
+    .region.failed .status-light {
+      background: var(--alert);
+      box-shadow: 0 0 14px rgba(255, 114, 94, .75);
+    }
+
+    .region.disabled .status-light {
+      background: var(--dim);
+      box-shadow: none;
+    }
+
+    .reroute {
+      position: absolute;
+      left: 53%;
+      top: 33%;
+      z-index: 4;
+      padding: 8px 11px;
+      border: 1px solid rgba(112, 241, 189, .35);
+      background: var(--bg);
+      color: var(--accent);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(7px);
+      transition: opacity .35s ease, transform .45s var(--ease);
+    }
+
+    .reroute.visible { opacity: 1; transform: translateY(0); }
+
+    .availability-control {
+      position: absolute;
+      left: 2%;
+      bottom: 0;
+      width: clamp(165px, 19vw, 245px);
+    }
+
+    .failure-button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 114, 94, .34);
+      background: rgba(255, 114, 94, .045);
+      color: #ff9a8c;
+      cursor: pointer;
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 8px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      transition: border-color .25s ease, background .25s ease;
+    }
+
+    .failure-button:hover { border-color: var(--alert); background: rgba(255, 114, 94, .1); }
+    .failure-button:focus-visible { outline: 2px solid var(--alert); outline-offset: 3px; }
+
+    .failure-button i {
+      display: grid;
+      place-items: center;
+      width: 19px;
+      height: 19px;
+      flex: none;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-style: normal;
+    }
+
+    .availability-comparison {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 18px;
+      min-width: 270px;
+      align-items: center;
+    }
+
+    .availability-comparison::before {
+      grid-column: 2;
+      grid-row: 1;
+      width: 1px;
+      height: 36px;
+      content: "";
+      background: var(--line);
+    }
+
+    .availability-comparison .comparison-cell:last-child { grid-column: 3; grid-row: 1; }
+
+    .comparison-cell strong.offline { color: var(--alert); }
+    .comparison-cell strong.online { color: var(--accent); }
+
+    .distributed-status,
+    .availability-status { bottom: 11%; }
+
+    .bottombar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      min-height: 74px;
+      padding: 0 clamp(24px, 4vw, 72px);
+      border-top: 1px solid var(--line);
+      background: rgba(7, 16, 15, .74);
+      backdrop-filter: blur(12px);
+    }
+
+    .scene-nav { display: flex; align-items: center; gap: 8px; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 9px;
+      border: 0;
+      background: transparent;
+      color: var(--dim);
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 680;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      transition: color .25s ease;
+    }
+
+    .nav-item::before {
+      width: 17px;
+      height: 2px;
+      content: "";
+      background: currentColor;
+      transition: width .35s var(--ease), box-shadow .3s ease;
+    }
+
+    .nav-item:hover,
+    .nav-item:focus-visible { color: var(--ink); }
+
+    .nav-item.active { color: var(--accent); }
+    .nav-item.active::before { width: 35px; box-shadow: 0 0 10px rgba(112, 241, 189, .7); }
+
+    .primary-control {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border: 1px solid rgba(112, 241, 189, .35);
+      border-radius: 50%;
+      background: rgba(112, 241, 189, .06);
+      color: var(--accent);
+      cursor: pointer;
+      transition: transform .25s ease, background .25s ease;
+    }
+
+    .primary-control:hover { transform: scale(1.06); background: rgba(112, 241, 189, .13); }
+    .primary-control:focus-visible,
+    .icon-button:focus-visible,
+    .nav-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    .pause-icon {
+      width: 10px;
+      height: 12px;
+      border-left: 3px solid currentColor;
+      border-right: 3px solid currentColor;
+    }
+
+    .paused .pause-icon {
+      width: 0;
+      height: 0;
+      margin-left: 3px;
+      border: 0;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      border-left: 11px solid currentColor;
+    }
+
+    .utility {
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .hint {
+      margin-right: 12px;
+      color: var(--dim);
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 9px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .icon-button {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color .25s ease, transform .25s ease;
+    }
+
+    .icon-button:hover { color: var(--accent); transform: translateY(-1px); }
+    .icon-button svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+    .scene.active .eyebrow,
+    .scene.active h1,
+    .scene.active .lede,
+    .scene.active .takeaway {
+      animation: copy-in .75s var(--ease) both;
+    }
+
+    .scene.active h1 { animation-delay: .08s; }
+    .scene.active .lede { animation-delay: .16s; }
+    .scene.active .takeaway { animation-delay: .24s; }
+
+    .paused .progress-fill,
+    .paused .ambient { animation-play-state: paused !important; }
+
+    @keyframes scene-progress { to { width: 100%; } }
+    @keyframes breathe { 50% { transform: scale(1.05); opacity: .7; } }
+    @keyframes copy-in { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes draw-line { to { stroke-dashoffset: 0; } }
+    @keyframes pop-in { to { opacity: 1; } }
+    @keyframes point-pulse { 50% { r: 6; opacity: .45; } }
+    @keyframes provision { to { opacity: 1; transform: none; border-color: rgba(112, 241, 189, .38); box-shadow: inset 0 1px rgba(255,255,255,.04), 0 12px 35px rgba(0,0,0,.18); } }
+    @keyframes deprovision { to { opacity: .16; transform: translateY(13px) scale(.94); border-color: rgba(175, 222, 203, .12); box-shadow: none; } }
+    @keyframes cloud-expand { to { transform: scale(1); opacity: 1; } }
+    @keyframes blink { 50% { opacity: .25; } }
+    @keyframes data-flow { to { stroke-dashoffset: -24; } }
+    @keyframes worker-online { to { opacity: 1; transform: scale(1); border-color: rgba(112, 241, 189, .34); } }
+    @keyframes worker-scan { 45%, 100% { transform: translateX(100%); } }
+    @keyframes shard-out { 0% { opacity: 0; transform: translate(0, 0) scale(.4); } 16% { opacity: 1; } 68% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--tx), var(--ty)) rotate(90deg) scale(.8); } }
+    @keyframes result-in { to { opacity: 1; transform: scale(1); } }
+    @keyframes result-pulse { 50% { box-shadow: 0 0 65px rgba(112, 241, 189, .2); } }
+    @keyframes replication-flow { to { stroke-dashoffset: -30; } }
+    @keyframes region-in { to { opacity: 1; transform: none; } }
+    @keyframes region-fail { to { opacity: .42; border-color: rgba(255, 114, 94, .58); filter: saturate(.35); } }
+    @keyframes light-fail { to { background: var(--alert); box-shadow: 0 0 14px rgba(255, 114, 94, .75); } }
+    @keyframes reroute-in { to { opacity: 1; transform: none; } }
+
+    /* Flexoki Light — warm paper, inky type, cyan operational states */
+    .topbar {
+      background: linear-gradient(180deg, rgba(255, 252, 240, .98), rgba(255, 252, 240, .76));
+    }
+
+    .bottombar {
+      background: rgba(255, 252, 240, .88);
+      box-shadow: 0 -12px 32px rgba(16, 15, 15, .025);
+    }
+
+    .brand-mark { border-color: rgba(36, 131, 123, .65); }
+    .progress-fill { box-shadow: 0 0 12px rgba(36, 131, 123, .34); }
+    .lede { color: var(--muted); }
+    .takeaway i { box-shadow: 0 0 12px rgba(36, 131, 123, .3); }
+
+    .simulation-range {
+      background: linear-gradient(90deg, var(--accent) 0 var(--load), var(--ui-2) var(--load) 100%);
+    }
+
+    .simulation-range::-webkit-slider-thumb {
+      border-color: var(--bg);
+      box-shadow: 0 0 0 1px var(--accent), 0 4px 14px rgba(36, 131, 123, .28);
+    }
+
+    .simulation-range::-moz-range-thumb {
+      border-color: var(--bg);
+      box-shadow: 0 0 0 1px var(--accent), 0 4px 14px rgba(36, 131, 123, .28);
+    }
+
+    .capacity-rule i { border-color: rgba(36, 131, 123, .45); }
+
+    .server {
+      border-color: var(--ui-2);
+      background: linear-gradient(145deg, rgba(255, 252, 240, .96), rgba(242, 240, 229, .92));
+      box-shadow: inset 0 1px rgba(255,255,255,.75), 0 8px 20px rgba(16, 15, 15, .025);
+      opacity: .28;
+    }
+
+    .server::before {
+      background: linear-gradient(90deg, var(--base, #B7B5AC) 0 62%, var(--ui) 62% 100%);
+      box-shadow: 0 16px var(--ui-2), 0 32px var(--ui-2);
+    }
+
+    .server.online {
+      border-color: rgba(36, 131, 123, .58);
+      background: linear-gradient(145deg, #FFFCF0, #F2F0E5);
+      box-shadow: inset 0 1px rgba(255,255,255,.8), 0 12px 28px rgba(16, 15, 15, .07), 0 0 0 1px rgba(36, 131, 123, .04);
+    }
+
+    .server.online::after,
+    .status-light { box-shadow: 0 0 10px rgba(36, 131, 123, .38); }
+    .server-cluster::before { border-color: rgba(36, 131, 123, .18); }
+
+    .distributed-map path,
+    .region-map path { stroke: rgba(36, 131, 123, .56); }
+
+    .dataset {
+      border-color: rgba(36, 131, 123, .62);
+      background: rgba(255, 252, 240, .94);
+      box-shadow: 0 16px 38px rgba(16, 15, 15, .06), inset 0 0 30px rgba(36, 131, 123, .035);
+    }
+
+    .dataset::before,
+    .dataset::after { border-color: rgba(36, 131, 123, .25); }
+
+    .worker {
+      border-color: var(--ui-2);
+      background: rgba(242, 240, 229, .88);
+      opacity: .24;
+    }
+
+    .worker.processing {
+      border-color: rgba(36, 131, 123, .55);
+      background: rgba(255, 252, 240, .96);
+      box-shadow: 0 8px 22px rgba(16, 15, 15, .055);
+    }
+
+    .worker::before {
+      background: linear-gradient(90deg, transparent, rgba(36, 131, 123, .14), transparent);
+    }
+
+    .result {
+      border-color: rgba(36, 131, 123, .55);
+      background: radial-gradient(circle, rgba(58, 169, 159, .13), rgba(255, 252, 240, .97) 66%);
+      box-shadow: 0 12px 34px rgba(16, 15, 15, .055);
+    }
+
+    .region {
+      border-color: var(--ui-2);
+      background: linear-gradient(145deg, rgba(255, 252, 240, .97), rgba(242, 240, 229, .94));
+      box-shadow: 0 12px 30px rgba(16, 15, 15, .055);
+    }
+
+    .storage-stack i {
+      border-color: rgba(36, 131, 123, .5);
+      background: rgba(58, 169, 159, .09);
+    }
+
+    .region.failed {
+      border-color: rgba(175, 48, 41, .62);
+      background: rgba(242, 240, 229, .9);
+    }
+
+    .region.failed .status-light { box-shadow: 0 0 10px rgba(175, 48, 41, .38); }
+    .reroute { border-color: rgba(36, 131, 123, .5); }
+
+    .failure-button {
+      border-color: rgba(175, 48, 41, .42);
+      background: rgba(209, 77, 65, .045);
+      color: var(--alert);
+    }
+
+    .failure-button:hover { background: rgba(209, 77, 65, .1); }
+    .nav-item.active::before { box-shadow: 0 0 8px rgba(36, 131, 123, .34); }
+
+    .primary-control {
+      border-color: rgba(36, 131, 123, .48);
+      background: rgba(58, 169, 159, .07);
+    }
+
+    .primary-control:hover { background: rgba(58, 169, 159, .13); }
+
+    @media (max-width: 900px) {
+      .presentation { min-height: 600px; }
+      .topbar { grid-template-columns: 1fr 1fr; min-height: 72px; }
+      .topbar .progress-track { position: absolute; left: 24px; right: 24px; bottom: 0; }
+      .scenes { inset: 73px 0 67px; }
+      .scene {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(245px, .85fr) minmax(260px, 1.15fr);
+        padding: 0 24px;
+      }
+      .copy { padding: 23px 0 15px; justify-content: end; }
+      .eyebrow { margin-bottom: 12px; }
+      h1 { max-width: 12ch; font-size: clamp(42px, 11vw, 72px); }
+      .lede { margin-top: 14px; max-width: 650px; font-size: 14px; line-height: 1.45; }
+      .takeaway { position: absolute; right: 0; bottom: 17px; margin: 0; font-size: 9px; }
+      .visual { border-left: 0; border-top: 1px solid var(--line); }
+      .visual-label { top: 15px; left: 0; }
+      .metric { top: 13px; }
+      .scale-stage { inset: 12% 0 3%; }
+      .workload-control { min-height: 0; }
+      .workload-readout { padding-bottom: 12px; }
+      .workload-readout strong { font-size: clamp(35px, 7vw, 52px); }
+      .range-wrap { padding: 22px 0 15px; }
+      .capacity-rule { padding: 10px 0; }
+      .demo-mode { margin-top: 10px; }
+      .distributed-stage, .availability-stage { inset: 8% 0 3%; }
+      .distributed-status, .availability-status { bottom: 13%; }
+      .bottombar { min-height: 67px; padding: 0 24px; }
+      .hint { display: none; }
+      .nav-item { width: 32px; overflow: hidden; padding: 8px 3px; color: transparent; gap: 0; }
+      .nav-item::before { flex: none; color: var(--dim); }
+      .nav-item.active::before { color: var(--accent); width: 27px; }
+    }
+
+    @media (max-width: 560px) {
+      .brand { font-size: 10px; }
+      .counter { font-size: 9px; }
+      .counter strong { font-size: 13px; }
+      .scene { grid-template-rows: minmax(270px, .9fr) minmax(250px, 1.1fr); }
+      h1 { font-size: clamp(40px, 13vw, 58px); }
+      .takeaway { display: none; }
+      .scale-stage { grid-template-columns: .75fr 1.25fr; gap: 15px; }
+      .control-kicker { margin-bottom: 7px; font-size: 8px; }
+      .workload-readout { display: block; }
+      .workload-readout strong { display: block; font-size: 34px; }
+      .workload-readout span { font-size: 8px; }
+      .range-wrap { padding: 16px 0 10px; }
+      .range-ticks { margin-top: 8px; font-size: 7px; }
+      .capacity-rule { grid-template-columns: auto 1fr; gap: 7px; padding: 7px 0; font-size: 8px; }
+      .capacity-rule i { width: 27px; height: 27px; font-size: 7px; }
+      .demo-mode { display: block; margin-top: 7px; font-size: 7px; }
+      .demo-mode > span { display: none; }
+      .server-cluster { gap: 7px; }
+      .server { height: 61px; }
+      .server-id { left: 7px; bottom: 7px; font-size: 6px; }
+      .server-state { display: none; }
+      .workers { left: 32%; top: 5%; bottom: 31%; width: 35%; gap: 6px; }
+      .worker { min-height: 0; font-size: 7px; }
+      .dataset { left: 0; top: 19%; width: 72px; }
+      .result { right: 0; top: 22%; width: 72px; }
+      .object-label { top: calc(100% + 7px); font-size: 6px !important; }
+      .worker-control { left: 0; width: 118px; }
+      .compact-control-label { gap: 5px; margin-bottom: 7px; font-size: 6px; }
+      .compact-control-label strong { font-size: 13px; }
+      .time-comparison { right: 0; min-width: 165px; gap: 6px; }
+      .comparison-cell span { margin-bottom: 3px; font-size: 6px; }
+      .comparison-cell strong { font-size: 11px; }
+      .comparison-arrow { font-size: 10px; }
+      .distributed-status, .availability-status { display: none; }
+      .region { width: 92px; padding: 8px; }
+      .region-1 { left: 0; }
+      .region-2 { left: 36%; top: 39%; }
+      .region-3 { right: 0; }
+      .region-name { font-size: 9px; }
+      .region-header { font-size: 6px; }
+      .storage-stack { gap: 3px; }
+      .reroute { left: 39%; top: 27%; padding: 5px; font-size: 6px; }
+      .availability-control { left: 0; width: 126px; }
+      .failure-button { margin-top: 7px; padding: 5px 6px; font-size: 6px; }
+      .failure-button i { width: 14px; height: 14px; }
+      .availability-comparison { right: 0; min-width: 158px; gap: 8px; }
+      .availability-comparison::before { height: 27px; }
+      .utility .icon-button:first-of-type { display: none; }
+    }
+
+    @media (max-height: 690px) and (min-width: 901px) {
+      .topbar { min-height: 70px; }
+      .scenes { inset: 71px 0 62px; }
+      .bottombar { min-height: 62px; }
+      .eyebrow { margin-bottom: 14px; }
+      .lede { margin-top: 20px; }
+      .takeaway { margin-top: 20px; }
+      h1 { font-size: clamp(45px, 5.4vw, 78px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="presentation" id="presentation" aria-label="Cloud computing motion graphic">
+    <div class="noise" aria-hidden="true"></div>
+    <div class="ambient" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span>Cloud systems</div>
+      <div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div>
+      <div class="counter"><strong id="current-count">01</strong> / 03</div>
+    </header>
+
+    <section class="scenes" aria-live="polite">
+      <article class="scene active" data-scene="0" aria-hidden="false">
+        <div class="copy">
+          <p class="eyebrow">01 — Elastic resource scaling</p>
+          <h1>Demand rises.<br><span>Capacity follows.</span></h1>
+          <p class="lede">Cloud platforms add CPU, memory, and servers during heavy analytics—then scale back when the workload falls.</p>
+          <div class="takeaway"><i></i><span>Fast performance · controlled cost</span></div>
+        </div>
+        <div class="visual">
+          <span class="visual-label" id="scale-visual-label">Live workload / automatic mode</span>
+          <div class="metric"><strong class="metric-value" id="node-count">02</strong><span class="metric-label">active compute nodes</span></div>
+          <div class="scale-stage">
+            <div class="workload-control">
+              <span class="control-kicker">Assign analytics workload</span>
+              <div class="workload-readout">
+                <strong id="workload-value">18%</strong>
+                <span>Current workload</span>
+              </div>
+              <div class="range-wrap">
+                <input class="simulation-range workload-range" id="workload-range" type="range" min="0" max="100" value="18" step="1" aria-label="Assigned analytics workload">
+                <div class="range-ticks" aria-hidden="true"><span>0%</span><span>50%</span><span>100%</span></div>
+              </div>
+              <div class="capacity-rule"><i>12%</i><span>Each compute node handles up to 12% of the assigned workload.</span></div>
+              <div class="demo-mode"><strong id="scale-mode">Auto demo</strong><span id="scale-hint">Drag to configure</span></div>
+            </div>
+            <div class="server-cluster" id="server-cluster" aria-label="Two of nine compute nodes active">
+              <div class="server"><span class="server-id">Node 01</span><span class="server-state">Idle</span></div>
+              <div class="server"><span class="server-id">Node 02</span><span class="server-state">Idle</span></div>
+              <div class="server"><span class="server-id">Node 03</span><span class="server-state">Idle</span></div>
+              <div class="server"><span class="server-id">Node 04</span><span class="server-state">Idle</span></div>
+              <div class="server"><span class="server-id">Node 05</span><span class="server-state">Idle</span></div>
+              <div class="server"><span class="server-id">Node 06</span><span class="server-state">Idle</span></div>
+              <div class="server"><span class="server-id">Node 07</span><span class="server-state">Idle</span></div>
+              <div class="server"><span class="server-id">Node 08</span><span class="server-state">Idle</span></div>
+              <div class="server"><span class="server-id">Node 09</span><span class="server-state">Idle</span></div>
+            </div>
+          </div>
+          <span class="live-caption" id="scale-status" aria-live="polite">Capacity matched</span>
+        </div>
+      </article>
+
+      <article class="scene" data-scene="1" aria-hidden="true">
+        <div class="copy">
+          <p class="eyebrow">02 — Distributed processing</p>
+          <h1>Split the data.<br><span>Solve it together.</span></h1>
+          <p class="lede">Hadoop and Apache Spark divide massive datasets into smaller parts, processing them at the same time across many machines.</p>
+          <div class="takeaway"><i></i><span>Parallel work · dramatically less time</span></div>
+        </div>
+        <div class="visual">
+          <span class="visual-label" id="distributed-visual-label">Parallel compute / automatic mode</span>
+          <div class="metric"><strong class="metric-value" id="speedup-value">1×</strong><span class="metric-label">estimated speedup</span></div>
+          <div class="distributed-stage">
+            <svg class="distributed-map" viewBox="0 0 800 500" preserveAspectRatio="none" aria-hidden="true">
+              <path data-worker="1" d="M140 250 C250 250 260 85 355 85"/><path data-worker="2" d="M140 250 C250 250 320 85 465 85"/>
+              <path data-worker="3" d="M140 250 C250 250 260 250 355 250"/><path data-worker="4" d="M140 250 C250 250 320 250 465 250"/>
+              <path data-worker="5" d="M140 250 C250 250 260 415 355 415"/><path data-worker="6" d="M140 250 C250 250 320 415 465 415"/>
+              <path data-worker="1" d="M390 85 C560 85 555 250 680 250"/><path data-worker="2" d="M500 85 C600 85 590 250 680 250"/>
+              <path data-worker="3" d="M390 250 C520 250 560 250 680 250"/><path data-worker="4" d="M500 250 C570 250 600 250 680 250"/>
+              <path data-worker="5" d="M390 415 C560 415 555 250 680 250"/><path data-worker="6" d="M500 415 C600 415 590 250 680 250"/>
+            </svg>
+            <div class="dataset"><span>8 TB</span><span class="object-label">Raw dataset</span></div>
+            <i class="shard" data-worker="1"></i><i class="shard" data-worker="2"></i><i class="shard" data-worker="3"></i><i class="shard" data-worker="4"></i><i class="shard" data-worker="5"></i><i class="shard" data-worker="6"></i>
+            <div class="workers">
+              <div class="worker" data-worker="1">NODE 01</div><div class="worker" data-worker="2">NODE 02</div>
+              <div class="worker" data-worker="3">NODE 03</div><div class="worker" data-worker="4">NODE 04</div>
+              <div class="worker" data-worker="5">NODE 05</div><div class="worker" data-worker="6">NODE 06</div>
+            </div>
+            <div class="result"><span>✓</span><span class="object-label">Unified result</span></div>
+            <div class="worker-control">
+              <label class="compact-control-label" for="worker-range"><span>Parallel workers</span><strong id="worker-count">01</strong></label>
+              <input class="simulation-range worker-range" id="worker-range" type="range" min="1" max="6" value="1" step="1" aria-label="Number of parallel workers">
+            </div>
+            <div class="time-comparison" aria-label="Estimated processing time comparison">
+              <div class="comparison-cell"><span>Sequential</span><strong id="sequential-time">96 min</strong></div>
+              <i class="comparison-arrow" aria-hidden="true">→</i>
+              <div class="comparison-cell accent"><span>Parallel</span><strong id="parallel-time">96 min</strong></div>
+            </div>
+          </div>
+          <span class="live-caption distributed-status" id="distributed-status" aria-live="polite">Single worker baseline</span>
+        </div>
+      </article>
+
+      <article class="scene" data-scene="2" aria-hidden="true">
+        <div class="copy">
+          <p class="eyebrow">03 — High-availability storage</p>
+          <h1>One fails.<br><span>Your data doesn’t.</span></h1>
+          <p class="lede">Cloud storage replicates data across servers and locations, so another copy remains available if a server or data centre goes down.</p>
+          <div class="takeaway"><i></i><span>Reliable · fault-tolerant · always accessible</span></div>
+        </div>
+        <div class="visual">
+          <span class="visual-label" id="availability-visual-label">Failure simulator / automatic mode</span>
+          <div class="metric"><strong class="metric-value" id="healthy-copies">3 / 3</strong><span class="metric-label">healthy data copies</span></div>
+          <div class="availability-stage">
+            <svg class="region-map" viewBox="0 0 800 500" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M155 135 C290 45 520 55 690 120"/>
+              <path d="M155 160 C205 310 285 390 400 390"/>
+              <path d="M435 390 C580 390 645 295 690 165"/>
+            </svg>
+            <div class="region region-1" data-region="0">
+              <div class="region-header"><span>Region A</span><i class="status-light"></i></div>
+              <div class="storage-stack"><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="region-name">Primary copy</span>
+            </div>
+            <div class="region region-2" data-region="1">
+              <div class="region-header"><span>Region B</span><i class="status-light"></i></div>
+              <div class="storage-stack"><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="region-name">Replica copy</span>
+            </div>
+            <div class="region region-3" data-region="2">
+              <div class="region-header"><span>Region C</span><i class="status-light"></i></div>
+              <div class="storage-stack"><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="region-name">Replica copy</span>
+            </div>
+            <span class="reroute">Traffic rerouted ↗</span>
+            <div class="availability-control">
+              <label class="compact-control-label" for="replica-range"><span>Replication factor</span><strong id="replica-count">3 copies</strong></label>
+              <input class="simulation-range replica-range" id="replica-range" type="range" min="1" max="3" value="3" step="1" aria-label="Number of replicated data copies">
+              <button class="failure-button" id="failure-toggle" type="button"><i>!</i><span>Simulate primary failure</span></button>
+            </div>
+            <div class="availability-comparison" aria-label="Availability comparison">
+              <div class="comparison-cell"><span>Single copy</span><strong id="single-copy-status">At risk</strong></div>
+              <div class="comparison-cell accent"><span>Replicated</span><strong class="online" id="replicated-status">Protected</strong></div>
+            </div>
+          </div>
+          <span class="live-caption availability-status" id="availability-status" aria-live="polite">Three copies synchronized</span>
+        </div>
+      </article>
+    </section>
+
+    <footer class="bottombar">
+      <nav class="scene-nav" aria-label="Select concept">
+        <button class="nav-item active" data-go="0" aria-label="Show elastic scaling">Scale</button>
+        <button class="nav-item" data-go="1" aria-label="Show distributed processing">Split</button>
+        <button class="nav-item" data-go="2" aria-label="Show high-availability storage">Survive</button>
+      </nav>
+      <button class="primary-control" id="play-toggle" aria-label="Pause animation" title="Play or pause (Space)"><span class="pause-icon" aria-hidden="true"></span></button>
+      <div class="utility">
+        <span class="hint">← → navigate · space pause</span>
+        <button class="icon-button" id="restart" aria-label="Restart current scene" title="Restart scene (R)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M19 12a7 7 0 1 0-1.3 4"/></svg>
+        </button>
+        <button class="icon-button" id="fullscreen" aria-label="Enter fullscreen" title="Fullscreen (F)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M3 16v5h5"/></svg>
+        </button>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    const deck = document.getElementById('presentation');
+    const scenes = [...document.querySelectorAll('.scene')];
+    const navItems = [...document.querySelectorAll('.nav-item')];
+    const counter = document.getElementById('current-count');
+    const playToggle = document.getElementById('play-toggle');
+    const restartButton = document.getElementById('restart');
+    const fullscreenButton = document.getElementById('fullscreen');
+    const workloadRange = document.getElementById('workload-range');
+    const workloadValue = document.getElementById('workload-value');
+    const nodeCount = document.getElementById('node-count');
+    const serverCluster = document.getElementById('server-cluster');
+    const servers = [...document.querySelectorAll('.server-cluster .server')];
+    const scaleStatus = document.getElementById('scale-status');
+    const scaleMode = document.getElementById('scale-mode');
+    const scaleHint = document.getElementById('scale-hint');
+    const scaleVisualLabel = document.getElementById('scale-visual-label');
+    const workerRange = document.getElementById('worker-range');
+    const workerCount = document.getElementById('worker-count');
+    const computeWorkers = [...document.querySelectorAll('.workers .worker')];
+    const workerPaths = [...document.querySelectorAll('.distributed-map path')];
+    const dataShards = [...document.querySelectorAll('.distributed-stage .shard')];
+    const speedupValue = document.getElementById('speedup-value');
+    const sequentialTime = document.getElementById('sequential-time');
+    const parallelTime = document.getElementById('parallel-time');
+    const distributedStatus = document.getElementById('distributed-status');
+    const distributedVisualLabel = document.getElementById('distributed-visual-label');
+    const replicaRange = document.getElementById('replica-range');
+    const replicaCount = document.getElementById('replica-count');
+    const regions = [...document.querySelectorAll('.availability-stage .region')];
+    const regionPaths = [...document.querySelectorAll('.region-map path')];
+    const healthyCopies = document.getElementById('healthy-copies');
+    const reroute = document.querySelector('.reroute');
+    const failureToggle = document.getElementById('failure-toggle');
+    const singleCopyStatus = document.getElementById('single-copy-status');
+    const replicatedStatus = document.getElementById('replicated-status');
+    const availabilityStatus = document.getElementById('availability-status');
+    const availabilityVisualLabel = document.getElementById('availability-visual-label');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const duration = 9000;
+
+    let index = 0;
+    let timer = null;
+    let paused = reducedMotion;
+    let scalingFrame = null;
+    let scalingStartedAt = 0;
+    let manualScaling = false;
+    let distributedFrame = null;
+    let distributedStartedAt = 0;
+    let manualDistributed = false;
+    let availabilityFrame = null;
+    let availabilityStartedAt = 0;
+    let manualAvailability = false;
+    let availabilityOutage = false;
+    let availabilityCopies = 3;
+
+    if (paused) deck.classList.add('paused');
+
+    function setWorkload(rawValue, direction = 0) {
+      const workload = Math.max(0, Math.min(100, Math.round(rawValue)));
+      const requiredNodes = Math.max(0, Math.min(servers.length, Math.ceil(workload / 12)));
+
+      workloadRange.value = workload;
+      workloadRange.style.setProperty('--load', `${workload}%`);
+      workloadRange.setAttribute('aria-valuetext', `${workload}% workload requiring ${requiredNodes} compute nodes`);
+      workloadValue.textContent = `${String(workload).padStart(2, '0')}%`;
+      nodeCount.textContent = String(requiredNodes).padStart(2, '0');
+      serverCluster.setAttribute('aria-label', `${requiredNodes} of ${servers.length} compute nodes active`);
+
+      servers.forEach((server, serverIndex) => {
+        const online = serverIndex < requiredNodes;
+        server.classList.toggle('online', online);
+        server.querySelector('.server-state').textContent = online ? 'Live' : 'Idle';
+      });
+
+      if (manualScaling) scaleStatus.textContent = `Manual allocation · ${requiredNodes} nodes active`;
+      else if (direction > 0) scaleStatus.textContent = 'Workload rising · scaling out';
+      else if (direction < 0) scaleStatus.textContent = 'Demand falling · scaling in';
+      else scaleStatus.textContent = 'Capacity matched to demand';
+    }
+
+    function workloadProfile(progress) {
+      const smooth = value => value * value * (3 - 2 * value);
+      if (progress < .1) return { value: 18, direction: 0 };
+      if (progress < .46) {
+        const phase = smooth((progress - .1) / .36);
+        return { value: 18 + phase * 82, direction: 1 };
+      }
+      if (progress < .59) return { value: 100, direction: 0 };
+      if (progress < .9) {
+        const phase = smooth((progress - .59) / .31);
+        return { value: 100 - phase * 66, direction: -1 };
+      }
+      return { value: 34, direction: 0 };
+    }
+
+    function startScalingDemo() {
+      cancelAnimationFrame(scalingFrame);
+      manualScaling = false;
+      scaleMode.textContent = 'Auto demo';
+      scaleHint.textContent = 'Drag to configure';
+      scaleVisualLabel.textContent = 'Live workload / automatic mode';
+      scalingStartedAt = performance.now();
+      setWorkload(18, 0);
+
+      function animateScaling(now) {
+        if (index !== 0 || manualScaling) return;
+        if (!paused) {
+          const progress = ((now - scalingStartedAt) % duration) / duration;
+          const profile = workloadProfile(progress);
+          setWorkload(profile.value, profile.direction);
+        }
+        scalingFrame = requestAnimationFrame(animateScaling);
+      }
+
+      scalingFrame = requestAnimationFrame(animateScaling);
+    }
+
+    function pauseForInteraction() {
+      if (paused) return;
+      paused = true;
+      deck.classList.add('paused');
+      playToggle.setAttribute('aria-label', 'Resume automatic demo');
+      clearTimeout(timer);
+    }
+
+    function enableManualScaling() {
+      if (!manualScaling) {
+        manualScaling = true;
+        cancelAnimationFrame(scalingFrame);
+        scaleMode.textContent = 'Manual mode';
+        scaleHint.textContent = 'Press play to resume';
+        scaleVisualLabel.textContent = 'Live workload / audience control';
+      }
+
+      pauseForInteraction();
+    }
+
+    function setWorkerCount(rawCount) {
+      const count = Math.max(1, Math.min(computeWorkers.length, Math.round(rawCount)));
+      const baselineMinutes = 96;
+      const estimatedMinutes = Math.ceil(baselineMinutes / count);
+      const fill = ((count - 1) / (computeWorkers.length - 1)) * 100;
+
+      workerRange.value = count;
+      workerRange.style.setProperty('--load', `${fill}%`);
+      workerRange.setAttribute('aria-valuetext', `${count} parallel workers, estimated ${estimatedMinutes} minutes`);
+      workerCount.textContent = String(count).padStart(2, '0');
+      speedupValue.textContent = `${count}×`;
+      sequentialTime.textContent = `${baselineMinutes} min`;
+      parallelTime.textContent = `${estimatedMinutes} min`;
+
+      computeWorkers.forEach((worker, workerIndex) => worker.classList.toggle('processing', workerIndex < count));
+      workerPaths.forEach(path => path.classList.toggle('enabled', Number(path.dataset.worker) <= count));
+      dataShards.forEach(shard => shard.classList.toggle('enabled', Number(shard.dataset.worker) <= count));
+
+      if (manualDistributed) distributedStatus.textContent = `Manual comparison · ${count} workers active`;
+      else if (count === 1) distributedStatus.textContent = 'Single worker baseline';
+      else distributedStatus.textContent = `${count} partitions processing simultaneously`;
+    }
+
+    function startDistributedDemo() {
+      cancelAnimationFrame(distributedFrame);
+      manualDistributed = false;
+      distributedVisualLabel.textContent = 'Parallel compute / automatic mode';
+      distributedStartedAt = performance.now();
+      setWorkerCount(1);
+
+      function animateDistributed(now) {
+        if (index !== 1 || manualDistributed) return;
+        if (!paused) {
+          const progress = ((now - distributedStartedAt) % duration) / duration;
+          const count = progress < .12 ? 1 : progress < .62 ? 1 + Math.round(((progress - .12) / .5) * 5) : 6;
+          setWorkerCount(count);
+        }
+        distributedFrame = requestAnimationFrame(animateDistributed);
+      }
+
+      distributedFrame = requestAnimationFrame(animateDistributed);
+    }
+
+    function enableManualDistributed() {
+      if (!manualDistributed) {
+        manualDistributed = true;
+        cancelAnimationFrame(distributedFrame);
+        distributedVisualLabel.textContent = 'Parallel compute / audience control';
+      }
+      pauseForInteraction();
+    }
+
+    function setAvailability(rawCopies, outage = false) {
+      const copies = Math.max(1, Math.min(regions.length, Math.round(rawCopies)));
+      const healthy = Math.max(0, copies - (outage ? 1 : 0));
+      const protectedService = outage ? healthy > 0 : copies > 1;
+      const fill = ((copies - 1) / (regions.length - 1)) * 100;
+
+      availabilityCopies = copies;
+      availabilityOutage = outage;
+      replicaRange.value = copies;
+      replicaRange.style.setProperty('--load', `${fill}%`);
+      replicaRange.setAttribute('aria-valuetext', `${copies} data copies, ${healthy} currently healthy`);
+      replicaCount.textContent = `${copies} ${copies === 1 ? 'copy' : 'copies'}`;
+      healthyCopies.textContent = `${healthy} / ${copies}`;
+
+      regions.forEach((region, regionIndex) => {
+        const provisioned = regionIndex < copies;
+        const failed = outage && regionIndex === 0 && provisioned;
+        region.classList.toggle('disabled', !provisioned);
+        region.classList.toggle('failed', failed);
+        region.querySelector('.region-name').textContent = regionIndex === 0 ? (failed ? 'Primary offline' : 'Primary copy') : (provisioned ? 'Replica copy' : 'Not provisioned');
+      });
+
+      regionPaths[0].classList.toggle('enabled', copies === 3);
+      regionPaths[1].classList.toggle('enabled', copies >= 2);
+      regionPaths[2].classList.toggle('enabled', copies === 3);
+      reroute.classList.toggle('visible', outage && healthy > 0);
+
+      singleCopyStatus.textContent = outage ? 'Offline' : 'At risk';
+      singleCopyStatus.className = outage ? 'offline' : '';
+      replicatedStatus.textContent = outage ? (healthy > 0 ? 'Online' : 'Offline') : (copies > 1 ? 'Protected' : 'At risk');
+      replicatedStatus.className = protectedService ? 'online' : (outage ? 'offline' : '');
+      failureToggle.querySelector('span').textContent = outage ? 'Restore primary region' : 'Simulate primary failure';
+      failureToggle.querySelector('i').textContent = outage ? 'R' : '!';
+
+      if (outage && healthy > 0) availabilityStatus.textContent = `Primary offline · serving from ${healthy} replica${healthy === 1 ? '' : 's'}`;
+      else if (outage) availabilityStatus.textContent = 'Primary offline · data unavailable';
+      else if (manualAvailability) availabilityStatus.textContent = `Manual configuration · ${copies} ${copies === 1 ? 'copy' : 'copies'}`;
+      else availabilityStatus.textContent = `${copies} ${copies === 1 ? 'copy' : 'copies'} synchronized`;
+    }
+
+    function startAvailabilityDemo() {
+      cancelAnimationFrame(availabilityFrame);
+      manualAvailability = false;
+      availabilityVisualLabel.textContent = 'Failure simulator / automatic mode';
+      availabilityStartedAt = performance.now();
+      setAvailability(3, false);
+
+      function animateAvailability(now) {
+        if (index !== 2 || manualAvailability) return;
+        if (!paused) {
+          const progress = ((now - availabilityStartedAt) % duration) / duration;
+          setAvailability(3, progress >= .3 && progress < .82);
+        }
+        availabilityFrame = requestAnimationFrame(animateAvailability);
+      }
+
+      availabilityFrame = requestAnimationFrame(animateAvailability);
+    }
+
+    function enableManualAvailability() {
+      if (!manualAvailability) {
+        manualAvailability = true;
+        cancelAnimationFrame(availabilityFrame);
+        availabilityVisualLabel.textContent = 'Failure simulator / audience control';
+      }
+      pauseForInteraction();
+    }
+
+    function stopAllDemos() {
+      cancelAnimationFrame(scalingFrame);
+      cancelAnimationFrame(distributedFrame);
+      cancelAnimationFrame(availabilityFrame);
+    }
+
+    function startSceneDemo(sceneIndex) {
+      stopAllDemos();
+      if (sceneIndex === 0) startScalingDemo();
+      if (sceneIndex === 1) startDistributedDemo();
+      if (sceneIndex === 2) startAvailabilityDemo();
+    }
+
+    function schedule() {
+      clearTimeout(timer);
+      if (!paused) timer = setTimeout(() => showScene((index + 1) % scenes.length), duration);
+    }
+
+    function restartAnimations(element) {
+      element.classList.remove('active');
+      void element.offsetWidth;
+      element.classList.add('active');
+      resetProgress();
+    }
+
+    function resetProgress() {
+      const progress = document.querySelector('.progress-fill');
+      progress.style.animation = 'none';
+      void progress.offsetWidth;
+      progress.style.animation = paused ? 'none' : `scene-progress ${duration}ms linear forwards`;
+    }
+
+    function showScene(nextIndex, forceRestart = false) {
+      index = (nextIndex + scenes.length) % scenes.length;
+      scenes.forEach((scene, i) => {
+        const isActive = i === index;
+        scene.classList.toggle('active', isActive);
+        scene.setAttribute('aria-hidden', String(!isActive));
+      });
+      navItems.forEach((item, i) => {
+        item.classList.toggle('active', i === index);
+        item.setAttribute('aria-current', i === index ? 'true' : 'false');
+      });
+      counter.textContent = String(index + 1).padStart(2, '0');
+      if (forceRestart) restartAnimations(scenes[index]);
+      else resetProgress();
+      startSceneDemo(index);
+      schedule();
+    }
+
+    function togglePlay() {
+      paused = !paused;
+      deck.classList.toggle('paused', paused);
+      playToggle.setAttribute('aria-label', paused ? 'Play animation' : 'Pause animation');
+      if (paused) clearTimeout(timer);
+      else {
+        restartAnimations(scenes[index]);
+        startSceneDemo(index);
+        schedule();
+      }
+    }
+
+    workloadRange.addEventListener('pointerdown', enableManualScaling);
+    workloadRange.addEventListener('input', () => {
+      enableManualScaling();
+      setWorkload(Number(workloadRange.value), 0);
+    });
+    workerRange.addEventListener('pointerdown', enableManualDistributed);
+    workerRange.addEventListener('input', () => {
+      enableManualDistributed();
+      setWorkerCount(Number(workerRange.value));
+    });
+    replicaRange.addEventListener('pointerdown', enableManualAvailability);
+    replicaRange.addEventListener('input', () => {
+      enableManualAvailability();
+      setAvailability(Number(replicaRange.value), availabilityOutage);
+    });
+    failureToggle.addEventListener('click', () => {
+      enableManualAvailability();
+      setAvailability(availabilityCopies, !availabilityOutage);
+    });
+    navItems.forEach(item => item.addEventListener('click', () => showScene(Number(item.dataset.go), true)));
+    playToggle.addEventListener('click', togglePlay);
+    restartButton.addEventListener('click', () => showScene(index, true));
+
+    fullscreenButton.addEventListener('click', async () => {
+      try {
+        if (!document.fullscreenElement) await deck.requestFullscreen();
+        else await document.exitFullscreen();
+      } catch (error) {
+        console.warn('Fullscreen is not available in this browser.', error);
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      fullscreenButton.setAttribute('aria-label', document.fullscreenElement ? 'Exit fullscreen' : 'Enter fullscreen');
+    });
+
+    document.addEventListener('keydown', event => {
+      const key = event.key.toLowerCase();
+      if (key === 'arrowright') showScene(index + 1, true);
+      if (key === 'arrowleft') showScene(index - 1, true);
+      if (key === ' ') { event.preventDefault(); togglePlay(); }
+      if (key === 'r') showScene(index, true);
+      if (key === 'f') fullscreenButton.click();
+    });
+
+    let touchStart = null;
+    deck.addEventListener('touchstart', event => {
+      if (event.target.closest('input, button')) return;
+      touchStart = event.changedTouches[0].clientX;
+    }, { passive: true });
+    deck.addEventListener('touchend', event => {
+      if (touchStart === null) return;
+      const distance = event.changedTouches[0].clientX - touchStart;
+      if (Math.abs(distance) > 60) showScene(index + (distance < 0 ? 1 : -1), true);
+      touchStart = null;
+    }, { passive: true });
+
+    startSceneDemo(0);
+    schedule();
+  </script>
+</body>
+</html>
